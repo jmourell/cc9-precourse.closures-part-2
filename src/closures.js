@@ -12,25 +12,26 @@ function gameGenerator(upperLimit) {
 // returns an object
 let upper = upperLimit;
 //take a number input that provides the 'upper bound' (limit)
+let number= randomInteger(upper);
+let numOfGuesses= 0;
 // - [ ] keep track of how many guesses have been made
   return {
     // - [ ] generate a random number between 0 and the upper bound
-    number: randomInteger(upper) ,
-    numOfGuesses: 0,
+    
     // - [ ] have a method `reset` that resets the game (new winning number, reset guesses, same upper bound)
   
     reset: function () {
 
-      let oldNo = this.number;
-      while (this.number=== oldNo){
-        this.number=randomInteger(upper);
+      let oldNo = number;
+      while (number=== oldNo){
+        number= randomInteger(upper);
       }  
-      this.numOfGuesses=0;
+      numOfGuesses=0;
     },
     // - [ ] have a method `giveUp` that returns the correct number and resets the game
   
     giveUp:function(){
-      let pastGameNumber=this.number;
+      let pastGameNumber=number;
       this.reset();
       return pastGameNumber;
     },
@@ -40,8 +41,8 @@ let upper = upperLimit;
       if (num > upper) {
           return false;
       } 
-      this.numOfGuesses++;
-      if (num===this.number){
+      numOfGuesses++;
+      if (num===number){
         return true;
       } else {
         return false;
@@ -50,7 +51,7 @@ let upper = upperLimit;
     // - [ ] have a method `numGuesses` that provides a way to see the number of guesses that have been made
   
     numberGuesses:function() {
-      return this.numOfGuesses;
+      return numOfGuesses;
     },
   }
 }
