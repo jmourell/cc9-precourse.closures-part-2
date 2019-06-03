@@ -38,16 +38,16 @@ describe("gameGenerator", () => {
         number.push(i);
       }
     }
-    expect(game.numGuesses()!==0).toBeTruthy();
+    expect(game.numberGuesses()!==0).toBeTruthy();
     game.reset();
-    expect(game.numGuesses()===0).toBeTruthy();
+    expect(game.numberGuesses()===0).toBeTruthy();
   });
 
   it("Expect number of guesses to equal one", () => {
     const bound = 3;
     const game = gameGenerator(bound);
     game.guess(2)
-    expect(game.numGuesses()===1).toBeTruthy();
+    expect(game.numberGuesses()===1).toBeTruthy();
   });
 
   it("Expect giveUp to return number", () => { 

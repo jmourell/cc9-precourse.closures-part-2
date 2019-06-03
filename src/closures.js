@@ -46,7 +46,7 @@ let upper = upperLimit;
     },
     // - [ ] have a method `numGuesses` that provides a way to see the number of guesses that have been made
   
-    numGuesses:function() {
+    numberGuesses:function() {
       return this.numOfGuesses;
     },
   }
