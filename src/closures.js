@@ -126,7 +126,7 @@ function accountGenerator(initial) {
         withdrawal.after = balance;
         withdrawal.status = DENIED;
       } 
-      withdrawal.date = new Date();
+      withdrawal.time = new Date();
       transactions.push(withdrawal);
       return withdrawal;
     },
@@ -141,7 +141,7 @@ function accountGenerator(initial) {
         before:balance,
         after:balance + amount,
         status:APPROVED,
-        date:new Date(),
+        time:new Date(),
       };
       balance += amount;
       transactions.push(deposit);

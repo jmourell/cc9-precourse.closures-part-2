@@ -78,23 +78,23 @@ describe("accountGenerator", () => {
   it("withdrawals should return objects ", () => {
     let account = accountGenerator(1000);
     
-    expect(account.withdraw(500)).toEqual({type:"withdrawal",amount:500,before:1000,after:500,status:"approved",date:new Date()});
-    expect(account.withdraw(1000)).toEqual({type:"withdrawal",amount:1000,before:500,after:500,status:"denied",date:new Date()});
-    expect(account.transactionHistory(1)).toEqual([{type:"withdrawal",amount:1000,before:500,after:500,status:"denied",date:new Date()}]);
+    expect(account.withdraw(500)).toEqual({type:"withdrawal",amount:500,before:1000,after:500,status:"approved",time:new Date()});
+    expect(account.withdraw(1000)).toEqual({type:"withdrawal",amount:1000,before:500,after:500,status:"denied",time:new Date()});
+    expect(account.transactionHistory(1)).toEqual([{type:"withdrawal",amount:1000,before:500,after:500,status:"denied",time:new Date()}]);
   });
 
   it("deposits should return objects ", () => {
     let account = accountGenerator(1000);
     
-    expect(account.deposit(500)).toEqual({type:"deposit",amount:500,before:1000,after:1500,status:"approved",date:new Date()});
-    expect(account.deposit(1000)).toEqual({type:"deposit",amount:1000,before:1500,after:2500,status:"approved",date:new Date()});
-    expect(account.transactionHistory(1)).toEqual([{type:"deposit",amount:1000,before:1500,after:2500,status:"approved",date:new Date()}]);
+    expect(account.deposit(500)).toEqual({type:"deposit",amount:500,before:1000,after:1500,status:"approved",time:new Date()});
+    expect(account.deposit(1000)).toEqual({type:"deposit",amount:1000,before:1500,after:2500,status:"approved",time:new Date()});
+    expect(account.transactionHistory(1)).toEqual([{type:"deposit",amount:1000,before:1500,after:2500,status:"approved",time:new Date()}]);
   });
   
   it("should average the deposits and withdrawls", () => {
     let account = accountGenerator(1000);
-    expect(account.deposit(500)).toEqual({type:"deposit",amount:500,before:1000,after:1500,status:"approved",date:new Date()});
-    expect(account.deposit(1000)).toEqual({type:"deposit",amount:1000,before:1500,after:2500,status:"approved",date:new Date()});
+    expect(account.deposit(500)).toEqual({type:"deposit",amount:500,before:1000,after:1500,status:"approved",time:new Date()});
+    expect(account.deposit(1000)).toEqual({type:"deposit",amount:1000,before:1500,after:2500,status:"approved",time:new Date()});
     account.withdraw(500); 
     account.withdraw(1000);
     expect(account.averageTransaction()).toEqual({deposit:750,withdrawal:750});
