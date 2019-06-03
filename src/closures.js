@@ -29,7 +29,6 @@ let upper = upperLimit;
       let pastGameNumber=this.number;
       this.reset();
       return pastGameNumber;
-      
     },
     // - [ ] have a method `guess` that allows you to guess the number and returns true or false if the guess is right or wrong
   
