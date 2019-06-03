@@ -20,7 +20,11 @@ let upper = upperLimit;
     // - [ ] have a method `reset` that resets the game (new winning number, reset guesses, same upper bound)
   
     reset: function () {
-      this.number=randomInteger(upper);
+
+      let oldNo = this.number;
+      while (this.number=== oldNo){
+        this.number=randomInteger(upper);
+      }  
       this.numOfGuesses=0;
     },
     // - [ ] have a method `giveUp` that returns the correct number and resets the game
