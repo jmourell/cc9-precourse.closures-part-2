@@ -51,48 +51,122 @@ let upper = upperLimit;
     },
   }
 }
+/**
+[ ] `accountGenerator`: You'll be provided with a function called `accountGenerator` in `src/closures.js`. Please add more functionality:
 
+- [ ] Add function `getBalance` that returns the current balance
+- [ ] Change `withdraw` to return a transaction object (see below)
+- [ ] Change `deposit` to return a transaction object (see below)
+- [ ] Implement a function `transactionHistory` to get the last `n` withdrawals or deposits 💵 (see below)
+- [ ] Implement a function `averageTransaction` that determines the average withdrawal and deposit amounts 💰. _IMPORTANT: Only approved transactions count towards the total!_. It should return an object that looks like
 
-  // function randomInteger(n) {
-  //   return Math.floor(Math.random() * (n + 1));
-  // }
+  ```js
+  {
+    deposit: number,
+    withdrawal: number
+  }
+  ```
 
-  // const upperBound = 5;
+- [ ] Use the `Date` object to incorporate a key `time` into the transactions 📅
 
-  // function guessThisNumber(n) {
-  //   if (n > upperBound) {
-  //     return {
-  //       message: `Wrong. Please try a number between 0 and ${upperBound}.`,
-  //       status: false
-  //     };
-  //   } else if (n === randomInteger(upperBound)) {
-  //     return {
-  //       message: "You win!",
-  //       status: true
-  //     };
-  //   }
+A single transaction should be represented by an object. For instance:
 
-  //   return {
-  //     message: `Wrong. Please try a number between 0 and ${upperBound}.`,
-  //     status: false
-  //   };
-  // }
+```js
+const exampleDeposit = {
+  type: "deposit",
+  amount: 1000,
+  before: 500,
+  after: 1500,
+  status: "approved"
+};
+
+const exampleWithdrawal = {
+  type: "withdrawal",
+  amount: 1000,
+  before: 520,
+  after: 520,
+  status: "denied"
+};
+```
+
+Transaction history, for instance:
+
+```js
+const account = accountGenerator(100);
+account.transactionHistory(2); // => [{...}, {...}]
+```
+*/
 
 
 function accountGenerator(initial) {
   let balance = initial;
+  //records transaction history
+  const transactions = [];
+   
+  const WITHDRAW = "withdrawal";
+  const DEPOSIT = "deposit";
+  const APPROVED = "approved";
+  const DENIED = "denied";
 
   return {
-    withdraw: function(amount) {
-      if (balance - amount >= 0) {
-        balance = balance - amount;
-        return `Here’s your money: $${amount}`;
-      }
-      return "Insufficient funds.";
+    getBalance:function() {
+      return balance;
     },
-    deposit: function(amount) {
-      balance = balance + amount;
-      return `Your balance is: $${balance}`;
+    withdraw: function(amount) {
+      const withdrawal = {
+        type:WITHDRAW,
+        amount:amount,
+        before:balance,
+      };
+      if (balance - amount >= 0) {
+        withdrawal.after = balance - amount;
+        withdrawal.status = APPROVED;
+        balance = balance - amount;
+      } else {
+        withdrawal.after = balance;
+        withdrawal.status = DENIED;
+      } 
+      withdrawal.date = new Date();
+      transactions.push(withdrawal);
+      return withdrawal;
+    },
+    transactionHistory:function(numOfTransactions){
+      return transactions.slice(-numOfTransactions);
     }
+    ,
+    deposit: function(amount) {
+      const deposit = {
+        type:DEPOSIT,
+        amount:amount,
+        before:balance,
+        after:balance + amount,
+        status:APPROVED,
+        date:new Date(),
+      };
+      balance += amount;
+      transactions.push(deposit);
+      return deposit;
+    },
+
+    averageTransaction:function() {
+      const deposits = transactions.filter((transaction)=>transaction.type===DEPOSIT && transaction.status===APPROVED)
+      const withdrawals = transactions.filter((transaction)=>transaction.type===WITHDRAW && transaction.status===APPROVED)
+      let depositAverage;
+      if (deposits.length === 0) {
+        depositAverage = 0;
+      } else {
+        depositAverage= deposits.reduce((total,deposit) => total + deposit.amount,0) / deposits.length;
+      }
+      let withdrawalAverage;
+      if (withdrawals.length=== 0) {
+        withdrawalAverage = 0;
+      } else {
+        withdrawalAverage = withdrawals.reduce((total,withdrawal) => total + withdrawal.amount,0) / withdrawals.length;
+      }
+      return {
+        deposit:depositAverage,
+        withdrawal:withdrawalAverage,
+      }
+    },
   };
 }

@@ -28,18 +28,7 @@ describe("gameGenerator", () => {
     expect(game.reset).toBeTruthy();
   });
 
-  it("Expect game to reset number of guesses", () => {
-    const bound = 4;
-    const game = gameGenerator(bound);
-    const number = [];
-    for (let i = 0; i < bound; i++) {
-      if (game.guess(i)) {
-        number.push(i);
-      }
-    }
-    game.reset();
-    expect(game.numGuesses()===0).toBeTruthy();
-  });
+ 
   it("Expect game to reset number of guesses", () => {
     const bound = 4;
     const game = gameGenerator(bound);
@@ -53,12 +42,13 @@ describe("gameGenerator", () => {
     game.reset();
     expect(game.numGuesses()===0).toBeTruthy();
   });
+
   it("Expect number of guesses to equal one", () => {
     const bound = 3;
     const game = gameGenerator(bound);
     game.guess(2)
     expect(game.numGuesses()===1).toBeTruthy();
-    });
+  });
 
   it("Expect giveUp to return number", () => { 
     const bound = 4;
@@ -72,14 +62,41 @@ describe("gameGenerator", () => {
     expect(game.giveUp()===number).toBeTruthy();
   });
 });
+
 describe("accountGenerator", () => {
   it("should be there", () => {
     expect(accountGenerator).toBeDefined();
     expect(typeof accountGenerator).toBe("function");
   });
-  
+  it("should have a get balance function ", () => {
+    let account = accountGenerator(500);
+    expect(account.getBalance).toBeDefined();
+    expect(typeof account.getBalance).toBe("function");
+    expect(account.getBalance()).toEqual(500);
+  });
 
-  it("should have some tests", () => {
-    expect(false).toBeTruthy();
+  it("withdrawals should return objects ", () => {
+    let account = accountGenerator(1000);
+    
+    expect(account.withdraw(500)).toEqual({type:"withdrawal",amount:500,before:1000,after:500,status:"approved",date:new Date()});
+    expect(account.withdraw(1000)).toEqual({type:"withdrawal",amount:1000,before:500,after:500,status:"denied",date:new Date()});
+    expect(account.transactionHistory(1)).toEqual([{type:"withdrawal",amount:1000,before:500,after:500,status:"denied",date:new Date()}]);
+  });
+
+  it("deposits should return objects ", () => {
+    let account = accountGenerator(1000);
+    
+    expect(account.deposit(500)).toEqual({type:"deposit",amount:500,before:1000,after:1500,status:"approved",date:new Date()});
+    expect(account.deposit(1000)).toEqual({type:"deposit",amount:1000,before:1500,after:2500,status:"approved",date:new Date()});
+    expect(account.transactionHistory(1)).toEqual([{type:"deposit",amount:1000,before:1500,after:2500,status:"approved",date:new Date()}]);
+  });
+  
+  it("should average the deposits and withdrawls", () => {
+    let account = accountGenerator(1000);
+    expect(account.deposit(500)).toEqual({type:"deposit",amount:500,before:1000,after:1500,status:"approved",date:new Date()});
+    expect(account.deposit(1000)).toEqual({type:"deposit",amount:1000,before:1500,after:2500,status:"approved",date:new Date()});
+    account.withdraw(500); 
+    account.withdraw(1000);
+    expect(account.averageTransaction()).toEqual({deposit:750,withdrawal:750});
   });
 });
